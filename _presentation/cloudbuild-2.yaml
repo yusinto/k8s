@@ -4,13 +4,23 @@ substitutions:
     _REPO: gcr.io/yus-demo
 
 steps:
-- name: gcr.io/cloud-builders/docker
-  id: docker-build
-  args: ['build', '--cache-from', '$_REPO/master:latest', '-t', '$_REPO/$BRANCH_NAME:latest', '.']
+- name: ubuntu
+  id: generate-image-tag
+  entrypoint: bash
+  args:
+  - '-c'
+  - echo $(date) | md5sum | awk '{print $1}' > tag.txt
 
 - name: gcr.io/cloud-builders/docker
-  id: docker-push
-  args: ['push', '$_REPO/$BRANCH_NAME:latest']
+  id: docker-build
+  entrypoint: bash
+  args:
+  - '-c'
+  - |
+    tag=`cat tag.txt`
+    echo tag=$tag
+    docker build -t "$_REPO/$BRANCH_NAME:$tag" .
+    docker push "$_REPO/$BRANCH_NAME:$tag"
 
 - name: gcr.io/cloud-builders/kubectl
   id: deploy-infrastructure
@@ -19,9 +29,8 @@ steps:
   args:
   - '-c'
   - |
+    tag=`cat tag.txt`
     cd gcp
-    sed -e "s|_BRANCH_NAME|$BRANCH_NAME|g" deployment.yaml | tee deployment2.yaml
+    sed -e "s|_BRANCH_NAME|$BRANCH_NAME|g" -e "s|_TAG|$tag|g" deployment.yaml | tee deployment2.yaml
     gcloud container clusters get-credentials --project="yus-demo" --zone="australia-southeast1-a" "features"
     kubectl apply -f deployment2.yaml
-
-images: ['$_REPO/$BRANCH_NAME:latest']

@@ -9,7 +9,7 @@ steps:
   entrypoint: bash
   args:
   - '-c'
-  - echo $(date) | md5 > tag.txt
+  - echo $(date) | md5sum | awk '{print $1}' > tag.txt
 
 - name: gcr.io/cloud-builders/docker
   id: docker-build
@@ -17,6 +17,7 @@ steps:
   args:
   - '-c'
   - |
-  tag=`cat tag.txt`
-  docker build -t "$_REPO/$BRANCH_NAME:$tag" .
-  docker push "$_REPO/$BRANCH_NAME:$tag"
+    tag=`cat tag.txt`
+    echo tag=$tag
+    docker build --cache-from "$_REPO/master:latest" -t "$_REPO/$BRANCH_NAME:$tag" .
+    docker push "$_REPO/$BRANCH_NAME:$tag"
