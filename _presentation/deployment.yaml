@@ -17,6 +17,7 @@ spec:
       containers:
       - name: _BRANCH_NAME
         image: gcr.io/yus-demo/_BRANCH_NAME:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
 
