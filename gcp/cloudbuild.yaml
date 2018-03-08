@@ -8,6 +8,10 @@ steps:
   id: docker-build
   args: ['build', '--cache-from', '$_REPO/$BRANCH_NAME:latest', '-t', '$_REPO/$BRANCH_NAME:latest', '.']
 
+- name: gcr.io/cloud-builders/docker
+  id: docker-build
+  args: ['push', '$_REPO/$BRANCH_NAME:latest']
+
 - name: gcr.io/cloud-builders/kubectl
   id: deploy-infrastructure
   env: ['CLOUDSDK_COMPUTE_ZONE=australia-southeast1-a', 'CLOUDSDK_CONTAINER_CLUSTER=features']
