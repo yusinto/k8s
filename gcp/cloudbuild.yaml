@@ -15,6 +15,7 @@ steps:
   args:
   - '-c'
   - |
+    cd gcp
     sed -e "s|_BRANCH_NAME|$BRANCH_NAME|g" deployment.yaml | tee deployment2.yaml
     gcloud container clusters get-credentials --project="yus-demo" --zone="australia-southeast1-a" "features"
     kubectl apply -f deployment2.yaml
