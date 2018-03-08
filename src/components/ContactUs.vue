@@ -21,9 +21,9 @@
 </template>
 
 <script>
-  export default {
-    name: 'ContactUs',
-  };
+export default {
+  name: 'ContactUs',
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
