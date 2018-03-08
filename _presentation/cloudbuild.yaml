@@ -6,7 +6,7 @@ substitutions:
 steps:
 - name: gcr.io/cloud-builders/docker
   id: docker-build
-  args: ['build', '--cache-from', '$_REPO/$BRANCH_NAME:latest', '-t', '$_REPO/$BRANCH_NAME:latest', '.']
+  args: ['build', '--cache-from', 'master:latest', '-t', '$_REPO/$BRANCH_NAME:latest', '.']
 
 - name: gcr.io/cloud-builders/docker
   id: docker-push
