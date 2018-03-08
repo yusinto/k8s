@@ -1,6 +1,6 @@
 import Express from 'express';
 
-const PORT = 8080;
+const PORT = 80;
 const app = Express();
 
 app.use(Express.static('dist'));
