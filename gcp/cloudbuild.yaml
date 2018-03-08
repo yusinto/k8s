@@ -1,0 +1,11 @@
+options:
+    machineType: N1_HIGHCPU_32
+substitutions:
+    _REPO: gcr.io/yus-demo
+
+steps:
+- name: gcr.io/cloud-builders/docker
+  id: docker-build
+  args: ['build', '--cache-from', '$_REPO/$BRANCH_NAME:latest', '-t', '$_REPO/$BRANCH_NAME:latest', '.']
+
+images: ['$_REPO/$BRANCH_NAME:latest']
