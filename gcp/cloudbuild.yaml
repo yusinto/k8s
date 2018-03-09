@@ -1,0 +1,23 @@
+options:
+    machineType: N1_HIGHCPU_32
+substitutions:
+    _REPO: gcr.io/yus-demo
+
+steps:
+- name: ubuntu
+  id: generate-image-tag
+  entrypoint: bash
+  args:
+  - '-c'
+  - echo $(date) | md5sum | awk '{print $1}' > tag.txt
+
+- name: gcr.io/cloud-builders/docker
+  id: docker-build
+  entrypoint: bash
+  args:
+  - '-c'
+  - |
+    tag=`cat tag.txt`
+    echo tag=$tag
+    docker build --cache-from "$_REPO/master:latest" -t "$_REPO/$BRANCH_NAME:$tag" .
+    docker push "$_REPO/$BRANCH_NAME:$tag"
