@@ -5,7 +5,7 @@
         <router-link to="/contactus">Contact Us</router-link>
       </li>
     </ul>
-    <h1>Homepage</h1>
+    <h1>welcome</h1>
     <div>{{msg}}</div>
   </div>
 </template>
